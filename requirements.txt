@@ -1,0 +1,5 @@
+streamlit  # Latest version or the version you're using
+ultralytics  # YOLO library
+opencv-python-headless  # OpenCV for image processing (headless version for servers)
+pillow # For image manipulation
+numpy # For numerical operations

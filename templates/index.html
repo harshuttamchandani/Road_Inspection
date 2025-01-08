@@ -1,0 +1,134 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPMG Hackathon Financial Statement Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #343a40;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="file"], input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .sections-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .sections-table th, .sections-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .sections-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+        .answer {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial Statement Analyzer</h1>
+
+        <!-- PDF Upload Form -->
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="pdf_file">Upload Financial Statement PDF</label>
+                <input type="file" id="pdf_file" name="pdf_file" required>
+            </div>
+
+            <div class="form-group">
+                <label for="question">Ask a Question</label>
+                <input type="text" id="question" name="question" placeholder="Ask about financial data..." required>
+            </div>
+
+            <button type="submit">Analyze</button>
+        </form>
+
+        <!-- Display Error Message -->
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <!-- Display Sections and Pages -->
+        {% if sections %}
+            <h2>Document Sections and Pages</h2>
+            <table class="sections-table">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Start Page</th>
+                        <th>End Page</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category, subsections in sections.items() %}
+                        <tr><td colspan="3"><strong>{{ category }}</strong></td></tr>
+                        {% for section, pages in subsections.items() %}
+                            <tr>
+                                <td>{{ section }}</td>
+                                <td>{{ pages['start'] if pages['start'] is not none else 'Not found' }}</td>
+                                <td>{{ pages['end'] if pages['end'] is not none else 'Not found' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <!-- Display Answer -->
+        {% if answer %}
+            <h2>Answer:</h2>
+            <div class="answer">{{ answer }}</div>
+        {% endif %}
+
+        <!-- Export Button -->
+        <form action="/export" method="GET">
+            <button type="submit">Export Section Data to Excel</button>
+        </form>
+    </div>
+</body>
+</html>
